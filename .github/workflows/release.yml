@@ -1,0 +1,69 @@
+# Creates a Github Tag and Release when PR is merged/closed to master
+# based on label provided to PR, the version is decided - major, minor, patch
+# norelease - when you do not want to release but want to merge
+
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+jobs:
+  check: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exit gracefully if not a release
+        id: releaseExitStep
+        run: |
+          echo "::set-output name=should_release::true"
+          if [[ ${{ contains(github.event.pull_request.labels.*.name, 'norelease') }} = "true" ]]; then
+            echo "::set-output name=should_release::false"
+          fi
+    outputs:
+      status: ${{steps.releaseExitStep.outputs.should_release}}
+
+
+  release:
+    runs-on: ubuntu-latest
+    needs: check
+    if: github.event.pull_request.merged == true && needs.check.outputs.status == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set git user
+        run: git config user.name seera-frontend && git config user.email seera-frontend@seera.sa
+
+      - name: Default release
+        id: defaultReleaseStep
+        run: echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
+
+      - name: Release type
+        id: releaseTypeStep
+        run: |
+          if [[ ${{ contains(github.event.pull_request.labels.*.name, 'patch') }} = "true" ]]; then
+            echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
+          fi
+          if [[ ${{ contains(github.event.pull_request.labels.*.name, 'minor') }} = "true" ]]; then
+            echo "RELEASE_TYPE=minor" >> $GITHUB_ENV
+          fi
+          if [[ ${{ contains(github.event.pull_request.labels.*.name, 'major') }} = "true" ]]; then
+            echo "RELEASE_TYPE=major" >> $GITHUB_ENV
+          fi
+
+      - name: Release a version
+        run: npm run release:$RELEASE_TYPE
+        id: releaseStep
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
