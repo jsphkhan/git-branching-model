@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 
 app.use((req, res, next) => {
     console.log('This is a middleware')
@@ -8,7 +9,7 @@ app.use((req, res, next) => {
 })
   
 app.use((req, res, next) => {
-    console.log('This is second middleware')
+    console.log('This is second middleware: ')
     next()
 })
   
