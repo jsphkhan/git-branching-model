@@ -1,6 +1,21 @@
 const express = require('express');
 const app = express();
 
+app.use((req, res, next) => {
+    console.log('This is a middleware')
+    return next()
+    console.log('This is first-half middleware')
+})
+  
+app.use((req, res, next) => {
+    console.log('This is second middleware')
+    next()
+})
+  
+app.use((req, res, next) => {
+    console.log('This is third middleware')
+    return next()
+})
 
 app.get('/ping', (req, res) => {
     res.send('pong');
