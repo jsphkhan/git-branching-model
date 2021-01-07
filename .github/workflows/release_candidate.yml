@@ -1,13 +1,14 @@
-# Creates a Github Tag and Release when PR is merged/closed to master
-# based on label provided to PR, the version is decided - major, minor, patch
-# norelease - when you do not want to release but want to merge
+# Creates a Pre-Release Release Candidate Github Tag 
+# and Release when PR is merged/closed to develop
+# Use PR label
+  # norelease - when you do not want to release rc candidate but want to merge
 
-name: Release
+name: Release Candidate
 
 on:
   pull_request:
     types: [closed]
-    branches: [master]
+    branches: [develop]
 
 jobs:
   check: 
@@ -43,27 +44,9 @@ jobs:
 
       - name: Set git user
         run: git config user.name ${{ github.actor }} && git config user.email ${{ github.actor }}@users.noreply.github.com
-
-      - name: Default release
-        id: defaultReleaseStep
-        run: echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
-
-      - name: Release type
-        id: releaseTypeStep
-        run: |
-          if [[ ${{ contains(github.event.pull_request.labels.*.name, 'patch') }} = "true" ]]; then
-            echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
-          fi
-          if [[ ${{ contains(github.event.pull_request.labels.*.name, 'minor') }} = "true" ]]; then
-            echo "RELEASE_TYPE=minor" >> $GITHUB_ENV
-          fi
-          if [[ ${{ contains(github.event.pull_request.labels.*.name, 'major') }} = "true" ]]; then
-            echo "RELEASE_TYPE=major" >> $GITHUB_ENV
-          fi
-
-      - name: Release a version
-        run: npm run release:$RELEASE_TYPE
+      
+      - name: Release a Release Candidate version
+        run: npm run release:rc
         id: releaseStep
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
