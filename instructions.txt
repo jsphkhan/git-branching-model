@@ -1,0 +1,20 @@
+This project is a dummy project which is a GIT repo
+This is where I am trying Github Branching models
+I will create feature branches, add features and merge to develop
+develop is the default branch. Forked out of master
+From develop we create RLS branch to release features. 
+RLS tags are created when RLS branch's PR is merged with master
+
+Tutorial: 
+----------
+https://nvie.com/posts/a-successful-git-branching-model/
+
+
+My Slides:
+-----------
+https://slides.com/josephk-1/deck-10b22f
+
+
+Git repo:
+---------
+https://github.com/jsphkhan/git-branching-model

@@ -3,7 +3,7 @@ const app = express();
 const path = require('path');
 
 app.use((req, res, next) => {
-    console.log('This is a middleware')
+    console.log('This is first middleware')
     return next()
     console.log('This is first-half middleware')
 })
