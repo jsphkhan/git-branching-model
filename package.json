@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "release:major": "release-it major",
     "release:minor": "release-it minor",
-    "release:patch": "release-it patch"
+    "release:patch": "release-it patch",
+    "release:rc": "release-it minor --preRelease=rc --npm.tag=next"
   },
   "keywords": [],
   "author": "",
