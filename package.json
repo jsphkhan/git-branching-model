@@ -1,6 +1,6 @@
 {
   "name": "git-branching-model",
-  "version": "2.3.0-rc.0",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "release:major": "release-it major",
     "release:minor": "release-it minor",
     "release:patch": "release-it patch",
-    "release:rc": "release-it minor --preRelease=rc --npm.tag=next"
+    "release:rc": "release-it minor --preRelease=rc"
   },
   "keywords": [],
   "author": "",
